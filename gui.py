@@ -15,50 +15,51 @@ from keras.models import load_model
 # Load your model
 model = load_model('./training/TSR.h5') # Path to your model
 
-# Dictionary to label all traffic signs class.
+# Diccionaria de Datos
 classes = { 1:'Limite de velocidad (20km/h)',
             2:'Limite de velocidad  (30km/h)', 
             3:'Limite de velocidad  (50km/h)', 
             4:'Limite de velocidad  (60km/h)', 
             5:'Limite de velocidad  (70km/h)', 
             6:'Limite de velocidad (80km/h)', 
-            7:'End of speed limit (80km/h)', 
-            8:'Speed limit (100km/h)', 
-            9:'Speed limit (120km/h)', 
-            10:'No passing', 
-            11:'No passing veh over 3.5 tons', 
-            12:'Right-of-way at intersection', 
-            13:'Priority road', 
-            14:'Yield', 
+            7:'Fin del límite de velocidad (80km/h)', 
+            8:'Limite de velocidad (100km/h)', 
+            9:'Limite de velocidad (120km/h)', 
+            10:'No pasar', 
+            11:'Peso mayor a 3.5 toneladas prohibido', 
+            12:'Derecho de paso en la intersección', 
+            13:'Camino prioritario', 
+            14:'Ceda el paso', 
             15:'Stop', 
-            16:'No vehicles', 
-            17:'Veh > 3.5 tons prohibited', 
-            18:'No entry', 
-            19:'General caution', 
-            20:'Dangerous curve left', 
-            21:'Dangerous curve right', 
-            22:'Double curve', 
-            23:'Bumpy road', 
-            24:'Slippery road', 
-            25:'Road narrows on the right', 
-            26:'Road work', 
-            27:'Traffic signals', 
-            28:'Pedestrians', 
-            29:'Children crossing', 
-            30:'Bicycles crossing', 
-            31:'Beware of ice/snow',
-            32:'Wild animals crossing', 
-            33:'End speed + passing limits', 
-            34:'Turn right ahead', 
-            35:'Turn left ahead', 
-            36:'Ahead only', 
-            37:'Go straight or right', 
-            38:'Go straight or left', 
-            39:'Keep right', 
-            40:'Keep left', 
-            41:'Roundabout mandatory', 
-            42:'End of no passing', 
-            43:'End no passing veh > 3.5 tons' }
+            16:'Sin vehiculos', 
+            17:'Peso mayor a 3.5 toneladas prohibido', 
+            18:'Prohibida la entrada', 
+            19:'Precaucion', 
+            20:'Curva a la izquierda peligrosa', 
+            21:'Curva a la derecha peligrosa', 
+            22:'Doble curva', 
+            23:'Camino lleno de baches', 
+            24:'Camino resbaloso', 
+            25:'El camino se estrecha a la derecha', 
+            26:'Trabajo en la carretera', 
+            27:'Señales de tráfico', 
+            28:'Peatones', 
+            29:'Niños cruzando', 
+            30:'Cruce de bicicletas', 
+            31:'Cuidado con el hielo/la nieve',
+            32:'Cruce de animales salvajes', 
+            33:'Velocidad final + límites de paso', 
+            34:'Adelante, gire a la derecha', 
+            35:'Adelante, gire a la izquierda', 
+            36:'Solo adelante', 
+            37:'Seguir recto o a la derecha',
+            38:'Seguir recto o a la izquierda',
+            39:'Manténgase a la derecha',
+            40:'Manténgase a la izquierda',
+            41:'Rotonda obligatoria',
+            42:'Fin de no pasar',
+            43:'Termina sin vehículos de paso > 3,5 toneladas' }
+
 
 # Initialise GUI
 top=tk.Tk()
@@ -74,38 +75,29 @@ label=Label(top,background='#CDCDCD', font=('arial',15,'bold'))
 sign_image = Label(top)
 
 
-# Function to classify image
 def classify(file_path):
     global label_packed
-    # Open the image file path
+    # Abrir imagen
     image = Image.open(file_path)
-    # Resize the image
+    # Modificar tamaño de la imagen
     image = image.resize((30,30))
-    # Inserts a new axis that will appear at the axis position in the expanded array shape
     image = numpy.expand_dims(image, axis=0)
-    # Convert to numpy array
     image = numpy.array(image)
-    # Make prediction
     pred = model.predict_classes([image])[0]
     sign = classes[pred+1]
     print(sign)
     label.configure(foreground='#011638', text=sign) 
     
-# Function to show the "classify" button
 def show_classify_button(file_path):
-    # Create the button
     classify_b=Button(top,text="Identificar imagen",command=lambda: classify(file_path),padx=10,pady=15)
-    # Configure button colors
     classify_b.configure(background='#364156', foreground='white',font=('arial',10,'bold'))
-    # Configure button place (location)
     classify_b.place(relx=0.79,rely=0.46)
     
-# Function to upload image
+# Funcion para la carga de imagen
 def upload_image():
     try:
-        # Path of the image
+       
         file_path=filedialog.askopenfilename()
-        # Open file path
         uploaded=Image.open(file_path)
         uploaded.thumbnail(((top.winfo_width()/2.25),(top.winfo_height()/2.25)))
         im=ImageTk.PhotoImage(uploaded)
@@ -116,11 +108,9 @@ def upload_image():
     except:
         pass
     
-# Create "Upload" button
+# Boton de subir
 upload=Button(top,text="Carga una imagen",command=upload_image,padx=10,pady=5)
-# "Upload" button colors and font
 upload.configure(background='#364156', foreground='white',font=('arial',10,'bold'))
-# Button location
 upload.pack(side=BOTTOM,pady=50)
 sign_image.pack(side=BOTTOM,expand=True)
 label.pack(side=BOTTOM,expand=True)
